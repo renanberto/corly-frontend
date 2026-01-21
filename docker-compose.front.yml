@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  frontend-dev:
+    profiles: ['dev']
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=https://api.localhost
+      - VITE_PUBLIC_SITE_URL=https://landing.localhost
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend-dev-landing.rule=Host(`landing.localhost`)
+      - traefik.http.routers.frontend-dev-landing.entrypoints=websecure
+      - traefik.http.routers.frontend-dev-landing.tls=true
+      - traefik.http.routers.frontend-dev-app.rule=Host(`app.localhost`)
+      - traefik.http.routers.frontend-dev-app.entrypoints=websecure
+      - traefik.http.routers.frontend-dev-app.tls=true
+      - traefik.http.services.frontend-dev.loadbalancer.server.port=5173
+    networks:
+      - traefik
+
+  frontend-prod:
+    profiles: ['prod-local']
+    build:
+      context: .
+      dockerfile: Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend-prod-landing.rule=Host(`landing.localhost`)
+      - traefik.http.routers.frontend-prod-landing.entrypoints=websecure
+      - traefik.http.routers.frontend-prod-landing.tls=true
+      - traefik.http.routers.frontend-prod-app.rule=Host(`app.localhost`)
+      - traefik.http.routers.frontend-prod-app.entrypoints=websecure
+      - traefik.http.routers.frontend-prod-app.tls=true
+      - traefik.http.services.frontend-prod.loadbalancer.server.port=80
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
