@@ -69,10 +69,10 @@ export interface Alert {
 
 export interface TrialPlan {
   trialDays: number;
-  limits: {
-    cases: number;
-    documents: number;
-    users: number;
+  trial_limits: {
+    max_cases: number;
+    max_documents: number;
+    max_users: number;
   };
 }
 
