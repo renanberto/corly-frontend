@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PublicLayout } from '@/presentation/layouts/PublicLayout';
 import { AppLayout } from '@/presentation/layouts/AppLayout';
-import { LandingPage } from '@/presentation/pages/LandingPage';
+import { LandingPage } from '@/pages/landing/LandingPage';
 import { PricingPage } from '@/presentation/pages/PricingPage';
 import { SignupPage } from '@/presentation/pages/SignupPage';
 import { LoginPage } from '@/presentation/pages/LoginPage';

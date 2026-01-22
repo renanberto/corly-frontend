@@ -1,5 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
+import { Footer } from '@/components/landing/Footer';
 
 export const PublicLayout = () => {
   return (
@@ -31,11 +32,7 @@ export const PublicLayout = () => {
       <main className="max-w-6xl mx-auto px-6 py-10">
         <Outlet />
       </main>
-      <footer className="border-t bg-slate-50">
-        <div className="max-w-6xl mx-auto px-6 py-6 text-xs text-slate-500">
-          Corly © 2024 - Orquestração documental para operações imobiliárias.
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
