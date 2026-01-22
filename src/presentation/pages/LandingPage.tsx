@@ -34,7 +34,7 @@ export const LandingPage = () => {
             <div className="text-sm text-slate-600 space-y-2">
               <div>Trial de {data.trialDays} dias para validar o fluxo completo.</div>
               <div>
-                Limites: {data.limits.cases} casos, {data.limits.documents} documentos, {data.limits.users} usuários.
+                Limites: {data.trial_limits.max_cases} casos, {data.trial_limits.max_documents} documentos, {data.trial_limits.max_users} usuários.
               </div>
               <div>Sem cartão de crédito. Ativação imediata.</div>
             </div>

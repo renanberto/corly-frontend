@@ -21,9 +21,9 @@ export const PricingPage = () => {
             <div className="space-y-2 text-sm text-slate-600">
               <p>{data.trialDays} dias para testar o fluxo completo.</p>
               <ul className="list-disc list-inside">
-                <li>{data.limits.cases} casos ativos</li>
-                <li>{data.limits.documents} documentos em gestão</li>
-                <li>{data.limits.users} usuários</li>
+                <li>{data.trial_limits.max_cases} casos ativos</li>
+                <li>{data.trial_limits.max_documents} documentos em gestão</li>
+                <li>{data.trial_limits.max_users} usuários</li>
               </ul>
             </div>
           )}
