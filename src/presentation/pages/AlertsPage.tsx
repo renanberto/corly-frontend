@@ -1,5 +1,5 @@
 import { Button, Card } from '@heroui/react';
-import { EmptyState } from '@/presentation/components/EmptyState';
+import { EmptyState } from '@/components/feedback/EmptyState';
 
 const alerts = [
   {

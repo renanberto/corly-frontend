@@ -1,9 +1,9 @@
 import { Button, Card, Input, Select, SelectItem } from '@heroui/react';
 import { useSearchParams } from 'react-router-dom';
-import { useCasesListVM } from '@/presentation/viewmodels/useCasesVM';
+import { useCasesList } from '@/features/cases/queries';
 import { LoadingSkeleton } from '@/presentation/components/LoadingSkeleton';
 import { StatusBadge } from '@/presentation/components/StatusBadge';
-import { EmptyState } from '@/presentation/components/EmptyState';
+import { EmptyState } from '@/components/feedback/EmptyState';
 
 const statusOptions = [
   { key: 'OPEN', label: 'Abertos' },
@@ -16,7 +16,7 @@ export const CasesListPage = () => {
   const status = searchParams.get('status') ?? '';
   const blocked = searchParams.get('blocked') ?? '';
   const externalParty = searchParams.get('externalParty') ?? '';
-  const { data, isLoading } = useCasesListVM({
+  const { data, isLoading } = useCasesList({
     status: status || undefined,
     blocked: blocked ? blocked === 'true' : undefined,
     externalParty: externalParty || undefined
