@@ -106,6 +106,7 @@ export const DashboardPage = () => {
   const [period, setPeriod] = useState('30');
   const [status, setStatus] = useState<CaseStatus | 'ALL'>('ALL');
   const [customRange, setCustomRange] = useState<{ start?: string; end?: string }>({});
+  const [search, setSearch] = useState('');
   const { data, isLoading, isError, refetch } = useCasesList({
     status: status === 'ALL' ? undefined : status
   });
@@ -113,8 +114,19 @@ export const DashboardPage = () => {
   const cases = data ?? [];
   const range = getRange(period, customRange);
   const periodCases = filterByRange(cases, range);
-  const filteredCases =
-    status === 'ALL' ? periodCases : periodCases.filter((item) => item.status === status);
+  const normalizedSearch = search.trim().toLowerCase();
+  const matchesSearch = (item: Case) => {
+    if (!normalizedSearch) return true;
+    return (
+      item.title.toLowerCase().includes(normalizedSearch) ||
+      item.bank.toLowerCase().includes(normalizedSearch)
+    );
+  };
+
+  const filteredCases = periodCases.filter((item) => {
+    const statusMatch = status === 'ALL' ? true : item.status === status;
+    return statusMatch && matchesSearch(item);
+  });
 
   const previousRange = useMemo(() => {
     const end = new Date(range.start);
@@ -123,7 +135,10 @@ export const DashboardPage = () => {
     return { start, end, days: range.days };
   }, [range]);
 
-  const previousCases = filterByRange(cases, previousRange);
+  const previousCases = filterByRange(cases, previousRange).filter((item) => {
+    const statusMatch = status === 'ALL' ? true : item.status === status;
+    return statusMatch && matchesSearch(item);
+  });
 
   const totals = useMemo(() => {
     const total = filteredCases.length;
@@ -176,13 +191,15 @@ export const DashboardPage = () => {
     period !== '30' ? `Período: ${periodOptions.find((item) => item.value === period)?.label}` : null,
     period === 'custom' && customRange.start && customRange.end
       ? `Custom: ${formatDate(customRange.start)} - ${formatDate(customRange.end)}`
-      : null
+      : null,
+    normalizedSearch ? `Busca: ${search.trim()}` : null
   ].filter(Boolean) as string[];
 
   const clearFilters = () => {
     setStatus('ALL');
     setPeriod('30');
     setCustomRange({});
+    setSearch('');
   };
 
   return (
@@ -207,6 +224,7 @@ export const DashboardPage = () => {
         <div className="text-xs text-slate-500">Última atualização: {formatDate(new Date())}</div>
       </Toolbar>
 
+      {/* UX note: filtros e KPIs convivem para reduzir esforço cognitivo e acelerar decisões. */}
       <FilterBar
         showClear={activeFilters.length > 0}
         onClear={clearFilters}
@@ -218,9 +236,21 @@ export const DashboardPage = () => {
               setPeriod('30');
               setCustomRange({});
             }
+            if (label.startsWith('Busca')) setSearch('');
           }
         }))}
       >
+        <label className="flex flex-col gap-1 text-xs font-semibold text-slate-600">
+          Busca
+          <input
+            type="search"
+            aria-label="Busca"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Caso, banco ou palavra-chave"
+            className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 placeholder:text-slate-400"
+          />
+        </label>
         <label className="flex flex-col gap-1 text-xs font-semibold text-slate-600">
           Período
           <select

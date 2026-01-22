@@ -7,6 +7,7 @@ interface NavItem {
   to: string;
   label: string;
   icon?: string;
+  section?: string;
 }
 
 interface BreadcrumbItem {
@@ -37,6 +38,16 @@ export const AppShell = ({
     return breadcrumbs?.length ? breadcrumbs : null;
   }, [breadcrumbs]);
 
+  const navGroups = useMemo(() => {
+    const grouped = navItems.reduce<Record<string, NavItem[]>>((acc, item) => {
+      const key = item.section ?? 'Visão geral';
+      acc[key] = acc[key] ? [...acc[key], item] : [item];
+      return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([label, items]) => ({ label, items }));
+  }, [navItems]);
+
   const handleNavigate = () => {
     setMobileOpen(false);
   };
@@ -49,9 +60,15 @@ export const AppShell = ({
             mobileOpen ? 'translate-x-0' : '-translate-x-full'
           } ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}`}
         >
+          {/* UX note: Sidebar reduz ruído mantendo navegação sempre visível e consistente. */}
           <div className="flex items-center justify-between px-4 py-4 border-b border-slate-200">
-            <Link to="/app/dashboard" className="text-lg font-semibold tracking-tight">
-              {brand}
+            <Link
+              to="/app/dashboard"
+              className="text-lg font-semibold tracking-tight text-slate-900"
+              aria-label="Ir para o dashboard"
+            >
+              <span className={`${sidebarCollapsed ? 'lg:hidden' : 'lg:inline'}`}>{brand}</span>
+              <span className={`${sidebarCollapsed ? 'lg:inline' : 'lg:hidden'}`}>{brand.charAt(0)}</span>
             </Link>
             <Button
               isIconOnly
@@ -64,25 +81,42 @@ export const AppShell = ({
               {sidebarCollapsed ? '»' : '«'}
             </Button>
           </div>
-          <nav className="p-4 space-y-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={handleNavigate}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
-                    isActive
-                      ? 'bg-primary-50 text-primary-700 font-semibold'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`
-                }
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-slate-100 text-xs font-semibold text-slate-600">
-                  {item.icon ?? item.label.charAt(0)}
-                </span>
-                <span className={`${sidebarCollapsed ? 'lg:hidden' : 'lg:block'}`}>{item.label}</span>
-              </NavLink>
+          <nav className="p-4 space-y-6">
+            {navGroups.map((group) => (
+              <div key={group.label} className="space-y-2">
+                <div
+                  className={`px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400 ${
+                    sidebarCollapsed ? 'lg:hidden' : 'lg:block'
+                  }`}
+                >
+                  {group.label}
+                </div>
+                <div className="space-y-1">
+                  {group.items.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      onClick={handleNavigate}
+                      className={({ isActive }) =>
+                        `group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-300 ${
+                          isActive
+                            ? 'bg-primary-50 text-primary-700 font-semibold'
+                            : 'text-slate-600 hover:bg-slate-100'
+                        }`
+                      }
+                    >
+                      <span
+                        className={`flex h-9 w-9 items-center justify-center rounded-md text-xs font-semibold ${
+                          sidebarCollapsed ? 'bg-slate-100 text-slate-600' : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        {item.icon ?? item.label.charAt(0)}
+                      </span>
+                      <span className={`${sidebarCollapsed ? 'lg:hidden' : 'lg:block'}`}>{item.label}</span>
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
         </aside>

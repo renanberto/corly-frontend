@@ -5,9 +5,9 @@ import { useMeVM } from '@/presentation/viewmodels/useAuthVM';
 import { AppShell } from '@/components/app/AppShell';
 
 const navLinks = [
-  { to: '/app/dashboard', label: 'Dashboard', icon: 'D' },
-  { to: '/app/cases', label: 'Casos', icon: 'C' },
-  { to: '/app/alerts', label: 'Alertas', icon: 'A' }
+  { to: '/app/dashboard', label: 'Dashboard', icon: 'D', section: 'Visão geral' },
+  { to: '/app/cases', label: 'Casos', icon: 'C', section: 'Operações' },
+  { to: '/app/alerts', label: 'Alertas', icon: 'A', section: 'Operações' }
 ];
 
 export const AppLayout = () => {
@@ -16,7 +16,7 @@ export const AppLayout = () => {
   useMeVM();
 
   const fullNav = permissions.includes('admin:read')
-    ? [...navLinks, { to: '/app/admin/document-types', label: 'Admin', icon: '⚙️' }]
+    ? [...navLinks, { to: '/app/admin/document-types', label: 'Admin', icon: '⚙️', section: 'Admin' }]
     : navLinks;
 
   return (

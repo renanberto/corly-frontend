@@ -104,6 +104,16 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Nenhum caso para este período')).toBeInTheDocument();
   });
 
+  it('filters cases by the search input', async () => {
+    const user = userEvent.setup();
+    renderDashboard();
+
+    await user.type(screen.getByLabelText('Busca'), 'Delta');
+
+    expect(screen.getByText('Operação Banco Delta')).toBeInTheDocument();
+    expect(screen.queryByText('Operação Banco Aurora')).not.toBeInTheDocument();
+  });
+
   it('shows error state and retries', async () => {
     const refetch = vi.fn();
     mockedUseCasesList.mockReturnValue({
