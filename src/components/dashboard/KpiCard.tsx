@@ -5,12 +5,21 @@ interface KpiCardProps {
   title: string;
   value: ReactNode;
   delta?: ReactNode;
+  deltaLabel?: string;
   hint?: string;
   trend?: number[];
   onClick?: () => void;
 }
 
-export const KpiCard = ({ title, value, delta, hint, trend = [], onClick }: KpiCardProps) => {
+export const KpiCard = ({
+  title,
+  value,
+  delta,
+  deltaLabel,
+  hint,
+  trend = [],
+  onClick
+}: KpiCardProps) => {
   return (
     <Card
       className={`group p-4 transition-shadow motion-safe:duration-200 ${
@@ -31,7 +40,12 @@ export const KpiCard = ({ title, value, delta, hint, trend = [], onClick }: KpiC
         <div className="space-y-2">
           <div className="text-xs font-medium uppercase tracking-wide text-slate-500">{title}</div>
           <div className="text-2xl font-semibold text-slate-900">{value}</div>
-          {delta}
+          {delta && (
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              {delta}
+              {deltaLabel && <span>{deltaLabel}</span>}
+            </div>
+          )}
         </div>
         <div className="flex items-end gap-1">
           {trend.length > 0
