@@ -1,6 +1,6 @@
 import { Blocker } from '@/domain/models';
 import { BlockerCard } from '@/presentation/components/BlockerCard';
-import { EmptyState } from '@/presentation/components/EmptyState';
+import { EmptyState } from '@/components/feedback/EmptyState';
 
 export const BlockersPanel = ({ blockers }: { blockers: Blocker[] }) => {
   if (!blockers.length) {

@@ -1,6 +1,6 @@
 import { Button, Card, Input, Select, SelectItem } from '@heroui/react';
 import { useState } from 'react';
-import { useCreateCaseVM } from '@/presentation/viewmodels/useCasesVM';
+import { useCreateCase } from '@/features/cases/queries';
 
 const templates = [{ key: 'financiada', label: 'Compra Financiada' }];
 
@@ -8,7 +8,7 @@ export const OnboardingPage = () => {
   const [template, setTemplate] = useState('financiada');
   const [caseTitle, setCaseTitle] = useState('');
   const [bank, setBank] = useState('');
-  const { mutateAsync, isPending } = useCreateCaseVM();
+  const { mutateAsync, isPending } = useCreateCase();
 
   const handleCreate = async () => {
     if (!caseTitle) return;

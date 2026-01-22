@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Button, Card, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from '@heroui/react';
 import { useParams } from 'react-router-dom';
-import { useCaseDetailVM } from '@/presentation/viewmodels/useCasesVM';
+import { useCaseDetail } from '@/features/cases/queries';
 import { BlockersPanel } from '@/presentation/components/BlockersPanel';
 import { DocumentCard } from '@/presentation/components/DocumentCard';
 import { TimelineItem } from '@/presentation/components/TimelineItem';
@@ -17,7 +17,7 @@ const statuses = [
 
 export const CaseDetailPage = () => {
   const { id } = useParams();
-  const { data, isLoading } = useCaseDetailVM(id ?? '');
+  const { data, isLoading } = useCaseDetail(id ?? '');
   const { mutateAsync: uploadDocument, isPending: isUploading } = useDocumentUploadVM();
   const { mutateAsync: transitionDoc } = useDocumentTransitionVM();
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
